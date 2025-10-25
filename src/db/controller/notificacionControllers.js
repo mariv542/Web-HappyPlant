@@ -1,3 +1,4 @@
+// db/controller/notificacionController.js
 const mongoose = require("mongoose");
 
 const notificacionSchema = new mongoose.Schema({
@@ -11,33 +12,24 @@ const notificacionSchema = new mongoose.Schema({
 
 const Notificacion = mongoose.model("Notificacion", notificacionSchema);
 
-const listarNotificaciones = async (req, res) => {
+// Devuelve las notificaciones (sin usar res)
+const listarNotificaciones = async () => {
   try {
     const notificaciones = await Notificacion.find();
-    res.json(notificaciones);
+    return notificaciones;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const obtenerNotificacion = async (req, res) => {
+const crearNotificacion = async (dato) => {
   try {
-    const n = await Notificacion.findOne({ id: req.params.id });
-    if (!n) return res.status(404).json({ msg: "No encontrada" });
-    res.json(n);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const crearNotificacion = async (req, res) => {
-  try {
-    const nueva = new Notificacion(req.body);
+    const nueva = new Notificacion(dato);
     await nueva.save();
-    res.status(201).json(nueva);
+    return nueva;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-module.exports = { listarNotificaciones, obtenerNotificacion, crearNotificacion };
+module.exports = { listarNotificaciones, crearNotificacion };

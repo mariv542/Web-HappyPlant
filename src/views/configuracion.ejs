@@ -1,27 +1,25 @@
-<% layout('Layouts/main') %>
-
 <h2 class="fw-bold mb-3">Configuración</h2>
 
 <form class="bg-white border rounded p-3" action="/configuracion" method="POST">
   <div class="mb-3">
     <label>Selección de frecuencia</label>
     <select name="frecuenciaRegistro" class="form-select">
-      <option value="30min" <%= configuracion.frecuenciaRegistro === '30min' ? 'selected' : '' %>>Cada 30 min</option>
-      <option value="1h" <%= configuracion.frecuenciaRegistro === '1h' ? 'selected' : '' %>>Cada 1 hora</option>
-      <option value="2h" <%= configuracion.frecuenciaRegistro === '2h' ? 'selected' : '' %>>Cada 2 horas</option>
+      <option value="30min" <%= configuracion?.frecuenciaRegistro === '30min' ? 'selected' : '' %>>Cada 30 min</option>
+      <option value="1h"   <%= configuracion?.frecuenciaRegistro === '1h' ? 'selected' : '' %>>Cada 1 hora</option>
+      <option value="2h"   <%= configuracion?.frecuenciaRegistro === '2h' ? 'selected' : '' %>>Cada 2 horas</option>
     </select>
   </div>
 
   <div class="mb-3">
     <label>Configurar límites de humedad</label>
-    <input type="number" name="humedadMin" class="form-control mb-2" placeholder="Mínimo (%)" value="<%= configuracion.humedadMin || '' %>">
-    <input type="number" name="humedadMax" class="form-control" placeholder="Máximo (%)" value="<%= configuracion.humedadMax || '' %>">
+    <input type="number" name="humedadMin" class="form-control mb-2" placeholder="Mínimo (%)" value="<%= configuracion?.humedadMin || '' %>">
+    <input type="number" name="humedadMax" class="form-control" placeholder="Máximo (%)" value="<%= configuracion?.humedadMax || '' %>">
   </div>
 
   <div class="mb-3">
     <label>Configurar límites de temperatura</label>
-    <input type="number" name="tempMin" class="form-control mb-2" placeholder="Mínimo (°C)" value="<%= configuracion.tempMin || '' %>">
-    <input type="number" name="tempMax" class="form-control" placeholder="Máximo (°C)" value="<%= configuracion.tempMax || '' %>">
+    <input type="number" name="tempMin" class="form-control mb-2" placeholder="Mínimo (°C)" value="<%= configuracion?.tempMin || '' %>">
+    <input type="number" name="tempMax" class="form-control" placeholder="Máximo (°C)" value="<%= configuracion?.tempMax || '' %>">
   </div>
 
   <button type="submit" class="btn btn-success">Guardar cambios</button>

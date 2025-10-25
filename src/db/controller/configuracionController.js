@@ -3,25 +3,29 @@ const mongoose = require("mongoose");
 const configuracionSchema = new mongoose.Schema({
   frecuenciaRegistro: String,
   unidadTemperatura: String,
+  humedadMin: Number,
+  humedadMax: Number,
+  tempMin: Number,
+  tempMax: Number,
 });
 
 const Configuracion = mongoose.model("Configuracion", configuracionSchema);
 
-const obtenerConfiguracion = async (req, res) => {
+const obtenerConfiguracion = async () => {
   try {
     const cfg = await Configuracion.findOne();
-    res.json(cfg);
+    return cfg;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
 const actualizarConfiguracion = async (req, res) => {
   try {
     const cfg = await Configuracion.findOneAndUpdate({}, req.body, { new: true, upsert: true });
-    res.json(cfg);
+    res.redirect("/configuracion"); // redirige al GET para mostrar cambios
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).send(error.message);
   }
 };
 

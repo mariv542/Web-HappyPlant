@@ -4,13 +4,14 @@ const { obtenerConfiguracion, actualizarConfiguracion } = require("../db/control
 
 router.get("/", async (req, res) => {
   try {
-    const config = await obtenerConfiguracion(); // Trae configuración de la DB
-    res.render("configuraciones", { title: "Configuración", config });
+    const config = await obtenerConfiguracion();
+    res.render("configuracion", { title: "Configuración", configuracion: config });
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
 
-router.put("/", actualizarConfiguracion);
+// Cambiado a POST para que funcione con el formulario
+router.post("/", actualizarConfiguracion);
 
 module.exports = router;

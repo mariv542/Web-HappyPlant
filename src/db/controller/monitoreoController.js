@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Definición del esquema de sensores
 const sensorSchema = new mongoose.Schema({
   id: String,
   tipo: String,
@@ -9,45 +10,43 @@ const sensorSchema = new mongoose.Schema({
   rangoOptimo: { min: Number, max: Number },
 });
 
+// Definición del esquema de monitoreo
 const monitoreoSchema = new mongoose.Schema({
   plantaId: String,
   sensores: [sensorSchema],
 });
 
+// ✅ Aquí defines el modelo Monitoreo
 const Monitoreo = mongoose.model("Monitoreo", monitoreoSchema);
 
-// ===== Funciones =====
-const listarMonitoreo = async (req, res) => {
+// ===== Funciones del controlador (sin usar res) =====
+const listarMonitoreo = async () => {
   try {
     const lista = await Monitoreo.find();
-    res.json(lista);
+    return lista;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const obtenerMonitoreo = async (req, res) => {
+const obtenerMonitoreo = async (plantaId) => {
   try {
-    const item = await Monitoreo.findOne({ plantaId: req.params.plantaId });
-    if (!item) return res.status(404).json({ msg: "No encontrado" });
-    res.json(item);
+    const item = await Monitoreo.findOne({ plantaId });
+    if (!item) throw new Error("No encontrado");
+    return item;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const crearMonitoreo = async (req, res) => {
+const crearMonitoreo = async (dato) => {
   try {
-    const nuevo = new Monitoreo(req.body);
+    const nuevo = new Monitoreo(dato);
     await nuevo.save();
-    res.status(201).json(nuevo);
+    return nuevo;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-module.exports = {
-  listarMonitoreo,
-  obtenerMonitoreo,
-  crearMonitoreo,
-};
+module.exports = { listarMonitoreo, obtenerMonitoreo, crearMonitoreo };

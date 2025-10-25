@@ -7,7 +7,7 @@ const monitoreo = require('./monitoreo.routes');
 const configuracion = require('./configuracion.routes');
 const historial = require('./historial.routes');
 
-const { listarPlantas } = require('../db/controller/plantasController'); // <- Importa el controlador
+const { listarPlantas } = require('../db/controller/plantaController'); // <- Importa el controlador
 
 ruta.use('/calendario', calendario);
 ruta.use('/notificaciones', notificaciones); 

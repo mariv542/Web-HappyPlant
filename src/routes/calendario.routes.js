@@ -4,7 +4,7 @@ const { listarCalendario } = require("../db/controller/calendarioController");
 
 router.get("/", async (req, res) => {
   try {
-    const calendario = await listarCalendario(); // Trae los datos de MongoDB
+    const calendario = await listarCalendario();
     res.render("calendario", { title: "Calendario de Riego", calendario });
   } catch (error) {
     res.status(500).send(error.message);

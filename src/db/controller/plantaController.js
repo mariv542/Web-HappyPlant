@@ -16,12 +16,12 @@ const Planta = mongoose.model("Planta", plantaSchema);
 // ===== Funciones del controlador =====
 
 // Listar todas las plantas
-const listarPlantas = async (req, res) => {
+const listarPlantas = async () => {
   try {
     const plantas = await Planta.find();
-    res.json(plantas);
+    return plantas; // devuelve los datos, no usa res
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw error; // el error se maneja en routes.js
   }
 };
 

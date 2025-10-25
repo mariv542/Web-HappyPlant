@@ -1,32 +1,39 @@
+// src/db/controller/calendarioController.js
 const mongoose = require("mongoose");
 
+// Esquema del Calendario
 const calendarioSchema = new mongoose.Schema({
-  id: String,
-  plantaId: String,
-  dia: String,
-  hora: String,
-  duracionMin: Number,
+  dia: { type: String, required: true },   // yyyy-mm-dd
+  hora: { type: String, required: true },  // hh:mm
 });
 
-const CalendarioRiego = mongoose.model("CalendarioRiego", calendarioSchema);
+const Calendario = mongoose.model("Calendario", calendarioSchema);
 
-const listarCalendario = async (req, res) => {
+// ===== Funciones del controlador =====
+
+// Listar todos los riegos
+const listarCalendario = async () => {
   try {
-    const lista = await CalendarioRiego.find();
-    res.json(lista);
+    const eventos = await Calendario.find().sort({ dia: 1, hora: 1 });
+    return eventos; // devolvemos los datos para la vista
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const crearCalendario = async (req, res) => {
+// Crear un nuevo riego
+const crearCalendario = async (dato) => {
   try {
-    const nuevo = new CalendarioRiego(req.body);
+    const nuevo = new Calendario(dato);
     await nuevo.save();
-    res.status(201).json(nuevo);
+    return nuevo;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-module.exports = { listarCalendario, crearCalendario };
+// Exportar funciones
+module.exports = {
+  listarCalendario,
+  crearCalendario,
+};

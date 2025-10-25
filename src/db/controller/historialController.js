@@ -10,22 +10,23 @@ const historialSchema = new mongoose.Schema({
 
 const Historial = mongoose.model("Historial", historialSchema);
 
-const listarHistorial = async (req, res) => {
+// Solo devuelve los datos, no usa res
+const listarHistorial = async () => {
   try {
     const historial = await Historial.find();
-    res.json(historial);
+    return historial; // ✅ devuelve la lista
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 
-const crearHistorial = async (req, res) => {
+const crearHistorial = async (dato) => {
   try {
-    const h = new Historial(req.body);
+    const h = new Historial(dato);
     await h.save();
-    res.status(201).json(h);
+    return h;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw new Error(error.message);
   }
 };
 

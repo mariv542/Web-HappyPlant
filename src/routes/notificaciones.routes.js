@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-const { listarNotificaciones } = require("../db/controller/configuracionController");
+const { listarNotificaciones } = require("../db/controller/notificacionControllers");
 
 router.get("/", async (req, res) => {
   try {
