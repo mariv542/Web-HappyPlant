@@ -1,0 +1,41 @@
+<% layout('Layouts/main') %>
+
+<h2 class="fw-bold mb-3">Notificaciones</h2>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="bg-white border rounded p-3" style="height: 300px; overflow-y: auto;">
+      <% if(notificaciones.length === 0){ %>
+        <p>No hay notificaciones.</p>
+      <% } else { %>
+        <ul class="list-group">
+          <% notificaciones.forEach(n => { %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong><%= n.mensaje %></strong> <br>
+                Planta: <%= n.plantaId %> <br>
+                Fecha: <%= new Date(n.fechaHora).toLocaleString() %>
+              </div>
+              <span class="badge 
+                <%= n.estado === 'pendiente' ? 'bg-warning' : n.estado === 'confirmado' ? 'bg-success' : 'bg-secondary' %> 
+                rounded-pill">
+                <%= n.estado %>
+              </span>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="bg-white border rounded p-3">
+      <p>Estados posibles:</p>
+      <ul>
+        <li>Pendiente</li>
+        <li>Confirmado</li>
+        <li>Leído</li>
+      </ul>
+    </div>
+  </div>
+</div>

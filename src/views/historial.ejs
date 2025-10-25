@@ -1,0 +1,35 @@
+<% layout('Layouts/main') %>
+
+<h2 class="fw-bold mb-3">Historial</h2>
+
+<div class="d-flex align-items-center mb-3">
+  <select class="form-select w-auto me-2" id="filtroTipo">
+    <option value="dia">Día</option>
+    <option value="mes">Mes</option>
+    <option value="año">Año</option>
+  </select>
+  <input type="date" class="form-control w-auto me-2" id="fechaFiltro">
+  <button class="btn btn-success" onclick="filtrarHistorial()">Buscar</button>
+</div>
+
+<div class="bg-white border rounded p-3">
+  <% if(historial.length === 0){ %>
+    <p>No hay registros disponibles.</p>
+  <% } else { %>
+    <% historial.forEach(h => { %>
+      <div class="mb-2">
+        <strong><%= h.tipo.charAt(0).toUpperCase() + h.tipo.slice(1) %></strong> - 
+        <%= h.fechaHora %> <br>
+        <em>Detalles:</em> <%= JSON.stringify(h.detalle) %>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+function filtrarHistorial() {
+  const tipo = document.getElementById('filtroTipo').value;
+  const fecha = document.getElementById('fechaFiltro').value;
+  window.location.href = `/historial?tipo=${tipo}&fecha=${fecha}`;
+}
+</script>

@@ -1,0 +1,85 @@
+{
+  "plantas": [
+    {
+      "id": "p001",
+      "nombre": "Orquídea Blanca",
+      "ubicacion": "Invernadero 1",
+      "parametros": {"temperatura": {"min": 18, "max": 24}, "humedadAmbiental": {"min": 75, "max": 85}}
+    },
+    {
+      "id": "p002",
+      "nombre": "Orquídea Morada",
+      "ubicacion": "Invernadero 2",
+      "parametros": {"temperatura": {"min": 18, "max": 24}, "humedadAmbiental": {"min": 70, "max": 85}}
+    }
+  ],
+  "monitoreo": [
+    {
+      "plantaId": "p001",
+      "sensores": [
+        {
+          "id": "s001",
+          "tipo": "Humedad",
+          "conexion": "WiFi",
+          "activo": true,
+          "ultimoDato": {"valor": 80.2, "fechaHora": "2025-10-19T10:30:00"},
+          "rangoOptimo": {"min": 75, "max": 85}
+        },
+        {
+          "id": "s002",
+          "tipo": "Temperatura",
+          "conexion": "WiFi",
+          "activo": true,
+          "ultimoDato": {"valor": 22.8, "fechaHora": "2025-10-19T10:30:00"},
+          "rangoOptimo": {"min": 18, "max": 24}
+        }
+      ]
+    },
+    {
+      "plantaId": "p002",
+      "sensores": []
+    }
+  ],
+  "notificaciones": [
+    {"id": "n001", "mensaje": "Hora de regar la Orquídea Blanca.", "plantaId": "p001", "fechaHora": "2025-10-19T09:00:00", "estado": "pendiente", "leido": false},
+    {"id": "n002", "mensaje": "Humedad ambiental fuera de rango.", "plantaId": "p001", "fechaHora": "2025-10-19T10:15:00", "estado": "confirmado", "leido": true}
+  ],
+  "historial": [
+    {
+      "id": "h001",
+      "plantaId": "p001",
+      "tipo": "lectura",
+      "detalle": {"humedad": 78.2, "temperatura": 22.5},
+      "fechaHora": "2025-10-19T10:00:00"
+    },
+    {
+      "id": "h002",
+      "plantaId": "p001",
+      "tipo": "lectura",
+      "detalle": {"humedad": 80.0, "temperatura": 23.1},
+      "fechaHora": "2025-10-19T11:00:00"
+    },
+    {
+      "id": "h003",
+      "plantaId": "p001",
+      "tipo": "alerta",
+      "detalle": {"mensaje": "La humedad ambiental está por debajo del rango óptimo."},
+      "fechaHora": "2025-10-19T10:15:00"
+    },
+    {
+      "id": "h004",
+      "plantaId": "p001",
+      "tipo": "riego",
+      "detalle": {"dia": "Lunes", "hora": "09:00", "duracionMin": 10},
+      "fechaHora": "2025-10-19T09:00:00"
+    }
+  ],
+  "calendarioRiego": [
+    {"id": "r001", "plantaId": "p001", "dia": "Lunes", "hora": "09:00", "duracionMin": 10},
+    {"id": "r002", "plantaId": "p001", "dia": "Jueves", "hora": "09:00", "duracionMin": 10}
+  ],
+  "configuracion": {
+    "frecuenciaRegistro": "1h",
+    "unidadTemperatura": "Celsius"
+  }
+}

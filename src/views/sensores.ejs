@@ -1,0 +1,38 @@
+<% layout('Layouts/main') %>
+
+<h2 class="fw-bold mb-3">Monitoreo</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <h5>Agregar sensor</h5>
+    <input type="text" placeholder="Nombre" class="form-control mb-2">
+    <input type="text" placeholder="Código" class="form-control mb-2">
+    <button class="btn btn-success w-100">Agregar</button>
+  </div>
+
+  <div class="col-md-8">
+    <div class="bg-white border rounded p-3">
+      <h6>Lista de sensores</h6>
+      <% if(!sensores || sensores.length === 0) { %>
+        <p>No hay sensores registrados.</p>
+      <% } else { %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% sensores.forEach(s => { %>
+              <tr>
+                <td><%= s.tipo %></td>
+                <td><%= s.activo ? 'Activo' : 'Inactivo' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+</div>

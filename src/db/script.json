@@ -1,0 +1,62 @@
+{
+  "plantas": {
+    "fields": {
+      "id": "string",
+      "nombre": "string",
+      "ubicacion": "string",
+      "parametros": {
+        "temperatura": {"min": "number", "max": "number"},
+        "humedadAmbiental": {"min": "number", "max": "number"}
+      }
+    }
+  },
+  "monitoreo": {
+    "fields": {
+      "plantaId": "string",
+      "sensores": [
+        {
+          "id": "string",
+          "tipo": "string",
+          "conexion": "string",
+          "activo": "boolean",
+          "ultimoDato": {"valor": "number", "fechaHora": "string"},
+          "rangoOptimo": {"min": "number", "max": "number"}
+        }
+      ]
+    }
+  },
+  "notificaciones": {
+    "fields": {
+      "id": "string",
+      "mensaje": "string",
+      "plantaId": "string",
+      "fechaHora": "string",
+      "estado": "string", 
+      "leido": "boolean"
+    }
+  },
+  "historial": {
+    "fields": {
+      "id": "string",
+      "plantaId": "string",
+      "tipo": "string",
+      "detalle": "object",
+      "fechaHora": "string"
+    }
+  },
+  "calendarioRiego": {
+    "fields": {
+      "id": "string",
+      "plantaId": "string",
+      "dia": "string",
+      "hora": "string",
+      "duracionMin": "number"
+    }
+  },
+  "configuracion": {
+    "fields": {
+      "frecuenciaRegistro": "string",
+      "unidadTemperatura": "string"
+    }
+  }
+}
