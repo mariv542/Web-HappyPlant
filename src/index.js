@@ -4,7 +4,8 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const conectarDB = require("./db/connection");
 const mainRoutes = require("./routes/routes");
-const expressLayouts = require("express-ejs-layouts"); // <-- Importar layouts
+const expressLayouts = require("express-ejs-layouts");
+require("./utils/scheduler/cron.js");
 
 // ==== Configuración inicial ====
 dotenv.config();
