@@ -1,8 +1,5 @@
-// calendarioController.js
 const mongoose = require("mongoose");
-const path = require("path");
-const ejs = require("ejs");
-const { enviarCorreo } = require("../../utils/mailer/mailer"); // Ajusta la ruta según tu proyecto
+const { enviarCorreo } = require("../../utils/mailer/mailer"); // Ajusta la ruta según tu estructura
 const { Router } = require("express");
 
 // ===== Esquema y modelo =====
@@ -34,20 +31,20 @@ const crearCalendario = async (dato) => {
     const nuevo = new Calendario(dato);
     await nuevo.save();
 
+    // === Aquí implementamos tu test adaptado ===
     if (dato.email) {
-      const templatePath = path.join(__dirname, "../../views/partials/correoRecordatorio.ejs");
-      const mensajeHtml = await ejs.renderFile(templatePath, {
-        nombre: dato.nombre,
-        plantaId: dato.plantaId,
-        dia: dato.dia,
-        hora: dato.hora
-      });
+      const destinatario = dato.email;
+      const asunto = "Recordatorio: Hora de regar tus orquídeas";
+      const mensaje = "<h1>¡Es momento de regar tus plantas!</h1>";
 
-      await enviarCorreo(dato.email, "🌱 Recordatorio de riego creado", mensajeHtml);
+      // Llamamos a tu función original
+      await enviarCorreo(destinatario, asunto, mensaje);
+      console.log(`✅ Correo enviado a ${destinatario}`);
     }
 
     return nuevo;
   } catch (error) {
+    console.error("❌ Error creando calendario:", error);
     throw new Error(error.message);
   }
 };

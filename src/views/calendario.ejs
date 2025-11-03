@@ -4,9 +4,17 @@
   <!-- Formulario para agregar riego -->
   <div class="col-md-4">
     <form action="/calendario" method="POST">
-      <label class="form-label">Agregar riego</label>
+      <label class="form-label fw-bold">Agregar riego</label>
+
+      <!-- Campos necesarios para enviar correo -->
+      <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre de la planta" required />
+      <input type="text" name="plantaId" class="form-control mb-2" placeholder="ID de la planta (opcional)" />
+      <input type="email" name="email" class="form-control mb-2" placeholder="Correo del usuario" required />
+
+      <!-- Fecha y hora del riego -->
       <input type="date" id="fechaRiego" name="dia" class="form-control mb-2" required />
       <input type="time" name="hora" class="form-control mb-2" required />
+
       <button type="submit" class="btn btn-success w-100">Agregar</button>
     </form>
   </div>
@@ -70,7 +78,6 @@
 
 <!-- Script del calendario -->
 <script>
-  // ✅ Cargar los datos del calendario desde EJS
   const calendario = JSON.parse('<%- JSON.stringify(calendario || []) %>');
 
   const calendarEl = document.getElementById("calendar");
@@ -94,11 +101,10 @@
 
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    const firstDayIndex = firstDay.getDay(); // 0=domingo
+    const firstDayIndex = firstDay.getDay();
 
     let daysHTML = `
-      <div class="d-grid fw-bold text-center mb-2" 
-           style="grid-template-columns: repeat(7, 1fr);">
+      <div class="d-grid fw-bold text-center mb-2" style="grid-template-columns: repeat(7, 1fr);">
         <div class="text-danger">D</div>
         <div>L</div><div>M</div><div>M</div>
         <div>J</div><div>V</div><div class="text-primary">S</div>
@@ -106,20 +112,17 @@
       <div class="d-grid" style="grid-template-columns: repeat(7, 1fr); text-align:center;">
     `;
 
-    // Espacios antes del primer día
     for (let i = 0; i < firstDayIndex; i++) {
       daysHTML += `<div></div>`;
     }
 
-    // Días del mes
     for (let d = 1; d <= lastDay.getDate(); d++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
       const isRiego = calendario.some(c => c.dia === dateStr);
 
       daysHTML += `
         <div class="p-2 border rounded m-1 ${isRiego ? 'bg-success text-white' : ''}" 
-             data-date="${dateStr}" 
-             style="min-height:60px; cursor:pointer;">
+             data-date="${dateStr}" style="min-height:60px; cursor:pointer;">
           <div>${d}</div>
           ${isRiego ? '<small>💧</small>' : ''}
         </div>`;
@@ -128,46 +131,31 @@
     daysHTML += "</div>";
     calendarEl.innerHTML = daysHTML;
 
-    // ➕ Añadir eventos de clic a los días
     document.querySelectorAll("#calendar [data-date]").forEach(day => {
       day.addEventListener("click", () => {
-        const selectedDate = day.getAttribute("data-date");
-        inputFecha.value = selectedDate;
-        // Pequeña animación visual
+        inputFecha.value = day.getAttribute("data-date");
         day.classList.add("bg-info", "text-white");
         setTimeout(() => day.classList.remove("bg-info", "text-white"), 500);
       });
     });
   }
 
-  // Navegación entre meses
   prevBtn.addEventListener("click", () => {
     currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
     renderCalendar(currentYear, currentMonth);
   });
 
   nextBtn.addEventListener("click", () => {
     currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
     renderCalendar(currentYear, currentMonth);
   });
 
-  // Inicialización
   renderCalendar(currentYear, currentMonth);
 </script>
 
 <style>
-  #calendar .border {
-    transition: all 0.2s;
-  }
-  #calendar .border:hover {
-    background-color: #d1e7dd;
-  }
+  #calendar .border { transition: all 0.2s; }
+  #calendar .border:hover { background-color: #d1e7dd; }
 </style>
