@@ -49,4 +49,11 @@ const crearMonitoreo = async (dato) => {
   }
 };
 
-module.exports = { listarMonitoreo, obtenerMonitoreo, crearMonitoreo };
+function ObetenerSensores() {
+  return [
+    { tipo: "Temperatura", activo: true },
+    { tipo: "Humedad", activo: true },
+  ];
+}
+
+module.exports = { listarMonitoreo, obtenerMonitoreo, crearMonitoreo, ObetenerSensores };

@@ -1,25 +1,18 @@
 const { Router } = require("express");
 const router = Router();
-const { listarMonitoreo } = require("../db/controller/monitoreoController");
+const { listarMonitoreo, ObetenerSensores } = require("../db/controller/monitoreoController");
 
-// ✅ Sensores simulados con SOLO nombre
-function generarSensoresSimulados() {
-  return [
-    { tipo: "Temperatura", activo: true },
-    { tipo: "Humedad", activo: true },
-  ];
-}
 
 // Ruta principal
 router.get("/", async (req, res) => {
   try {
     const sensoresBD = await listarMonitoreo();
-    const sensoresSimulados = generarSensoresSimulados();
+    const sensoresOb = ObetenerSensores();
 
-    // Combinar sensores reales + simulados
+    // Combinar sensores reales 
     const sensores = sensoresBD.length
-      ? [...sensoresBD, ...sensoresSimulados]
-      : sensoresSimulados;
+      ? [...sensoresBD, ...sensoresOb]
+      : sensoresOb;
 
     res.render("sensores", { title: "Monitoreo de Sensores", sensores });
   } catch (error) {

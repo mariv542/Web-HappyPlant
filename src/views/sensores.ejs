@@ -65,30 +65,26 @@
   </div>
 </div>
 
-<!-- 🔧 Script de simulación -->
 <script>
-  // Valores iniciales simulados
-  let tempActual = 22.0;  // temperatura inicial
-  let humActual = 75.0;   // humedad inicial
+  // Valores iniciales 
+  let tempActual = 22.0;  
+  let humActual = 75.0;   
   let tempAnterior = tempActual;
   let humAnterior = humActual;
 
-  function generarValores() {
+  function Valores() {
     // Guardar los valores actuales como anteriores
     tempAnterior = tempActual;
     humAnterior = humActual;
 
-    // Simular variaciones suaves
-    tempActual += (Math.random() * 0.6 - 0.3);  // cambia entre -0.3 y +0.3°C
-    humActual += (Math.random() * 2 - 1);       // cambia entre -1 y +1%
+    tempActual += (Math.random() * 0.6 - 0.3);  
+    humActual += (Math.random() * 2 - 1);       
 
-    // Limitar dentro de un rango realista
     if (tempActual < 18) tempActual = 18;
     if (tempActual > 26) tempActual = 26;
     if (humActual < 60) humActual = 60;
     if (humActual > 90) humActual = 90;
 
-    // Actualizar en pantalla (ahora valor actual va primero)
     document.getElementById("tempValor").innerText = `${tempActual.toFixed(1)} °C`;
     document.getElementById("tempAnterior").innerText = `${tempAnterior.toFixed(1)} °C`;
 
@@ -97,6 +93,6 @@
   }
 
   // Ejecutar al cargar y cada 10 segundos
-  generarValores();
-  setInterval(generarValores, 10000);
+  Valores();
+  setInterval(Valores, 10000);
 </script>
