@@ -1,37 +1,102 @@
+<h2 class="fw-bold mb-4 text-center">Monitoreo de Sensores</h2>
 
-<h2 class="fw-bold mb-3">Monitoreo</h2>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="bg-white border rounded shadow-sm p-4">
+        
+        <!-- 🧭 Lista de sensores registrados -->
+        <h5 class="mb-3 text-primary">Lista de Sensores</h5>
+        <% if(!sensores || sensores.length === 0) { %>
+          <p class="text-muted">No hay sensores registrados.</p>
+        <% } else { %>
+          <table class="table table-striped align-middle text-center fs-5">
+            <thead class="table-success">
+              <tr>
+                <th>Nombre</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% sensores.forEach(s => { %>
+                <tr>
+                  <td class="py-3"><%= s.tipo %></td>
+                  <td class="py-3">
+                    <span class="<%= s.activo ? 'text-success' : 'text-danger' %> fw-bold">
+                      <%= s.activo ? 'Activo' : 'Inactivo' %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
 
-<div class="row">
-  <div class="col-md-4">
-    <h5>Agregar sensor</h5>
-    <input type="text" placeholder="Nombre" class="form-control mb-2">
-    <input type="text" placeholder="Código" class="form-control mb-2">
-    <button class="btn btn-success w-100">Agregar</button>
-  </div>
-
-  <div class="col-md-8">
-    <div class="bg-white border rounded p-3">
-      <h6>Lista de sensores</h6>
-      <% if(!sensores || sensores.length === 0) { %>
-        <p>No hay sensores registrados.</p>
-      <% } else { %>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Nombre</th>
+        <!-- 🌡️ Sensores simulados -->
+        <hr class="my-4">
+        <h5 class="mb-3 text-primary">Sensores Simulados</h5>
+        <table class="table table-bordered text-center align-middle fs-5" id="tablaSimulados" style="min-width: 700px;">
+          <thead class="table-info">
+            <tr style="height: 60px;">
+              <th>Sensor</th>
+              <th>Valor actual</th>
+              <th>Valor anterior</th>
               <th>Estado</th>
             </tr>
           </thead>
           <tbody>
-            <% sensores.forEach(s => { %>
-              <tr>
-                <td><%= s.tipo %></td>
-                <td><%= s.activo ? 'Activo' : 'Inactivo' %></td>
-              </tr>
-            <% }) %>
+            <tr style="height: 60px;">
+              <td>🌡️ Temperatura</td>
+              <td id="tempValor" class="fw-semibold">-- °C</td>
+              <td id="tempAnterior" class="fw-semibold">-- °C</td>
+              <td class="text-success fw-bold">Activo</td>
+            </tr>
+            <tr style="height: 60px;">
+              <td>💧 Humedad</td>
+              <td id="humValor" class="fw-semibold">-- %</td>
+              <td id="humAnterior" class="fw-semibold">-- %</td>
+              <td class="text-success fw-bold">Activo</td>
+            </tr>
           </tbody>
         </table>
-      <% } %>
+
+      </div>
     </div>
   </div>
 </div>
+
+<!-- 🔧 Script de simulación -->
+<script>
+  // Valores iniciales simulados
+  let tempActual = 22.0;  // temperatura inicial
+  let humActual = 75.0;   // humedad inicial
+  let tempAnterior = tempActual;
+  let humAnterior = humActual;
+
+  function generarValores() {
+    // Guardar los valores actuales como anteriores
+    tempAnterior = tempActual;
+    humAnterior = humActual;
+
+    // Simular variaciones suaves
+    tempActual += (Math.random() * 0.6 - 0.3);  // cambia entre -0.3 y +0.3°C
+    humActual += (Math.random() * 2 - 1);       // cambia entre -1 y +1%
+
+    // Limitar dentro de un rango realista
+    if (tempActual < 18) tempActual = 18;
+    if (tempActual > 26) tempActual = 26;
+    if (humActual < 60) humActual = 60;
+    if (humActual > 90) humActual = 90;
+
+    // Actualizar en pantalla (ahora valor actual va primero)
+    document.getElementById("tempValor").innerText = `${tempActual.toFixed(1)} °C`;
+    document.getElementById("tempAnterior").innerText = `${tempAnterior.toFixed(1)} °C`;
+
+    document.getElementById("humValor").innerText = `${humActual.toFixed(1)} %`;
+    document.getElementById("humAnterior").innerText = `${humAnterior.toFixed(1)} %`;
+  }
+
+  // Ejecutar al cargar y cada 10 segundos
+  generarValores();
+  setInterval(generarValores, 10000);
+</script>
