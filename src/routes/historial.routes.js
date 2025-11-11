@@ -4,10 +4,10 @@ const { listarHistorial } = require("../db/controller/historialController");
 
 router.get("/", async (req, res) => {
   try {
-    const historial = await listarHistorial(); // ✅ ahora devuelve datos
+    const historial = await listarHistorial();
     res.render("historial", { title: "Historial", historial });
   } catch (error) {
-    res.status(500).send(error.message); // ✅ Aquí usamos res
+    res.status(500).send(error.message);
   }
 });
 

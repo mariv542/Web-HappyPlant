@@ -3,13 +3,15 @@ const path = require("path");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const conectarDB = require("./db/connection");
-const mainRoutes = require("./routes/routes");
 const expressLayouts = require("express-ejs-layouts");
-require("./utils/scheduler/cron.js");
+const http = require("http");
+const { Server } = require("socket.io");
 
 // ==== Configuración inicial ====
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 
 // ==== Middleware ====
@@ -21,13 +23,17 @@ app.use(morgan("dev"));
 // ==== Motor de vistas (EJS) + Layouts ====
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(expressLayouts);                 // <-- Activar layouts
-app.set("layout", "Layouts/main");       // <-- Layout por defecto
+app.use(expressLayouts);
+app.set("layout", "Layouts/main");
 
 // ==== Conexión a MongoDB ====
 conectarDB();
 
+// ==== Importar simulación de sensores ====
+require("./utils/Sensores")(io); // <-- pasamos io para emitir datos en tiempo real
+
 // ==== Rutas principales ====
+const mainRoutes = require("./routes/routes");
 app.use("/", mainRoutes);
 
 // ==== Manejo de 404 ====
@@ -36,6 +42,6 @@ app.use((req, res) => {
 });
 
 // ==== Iniciar servidor ====
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

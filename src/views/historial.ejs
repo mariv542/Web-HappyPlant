@@ -1,27 +1,35 @@
+<h2 class="fw-bold mb-4 text-center">Historial de Sensores</h2>
 
-<h2 class="fw-bold mb-3">Historial</h2>
-
-<div class="d-flex align-items-center mb-3">
-  <select class="form-select w-auto me-2" id="filtroTipo">
+<div class="d-flex align-items-center mb-3 flex-wrap">
+  <select class="form-select w-auto me-2 mb-2" id="filtroTipo">
     <option value="dia">Día</option>
     <option value="mes">Mes</option>
     <option value="año">Año</option>
   </select>
-  <input type="date" class="form-control w-auto me-2" id="fechaFiltro">
-  <button class="btn btn-success" onclick="filtrarHistorial()">Buscar</button>
+  <input type="date" class="form-control w-auto me-2 mb-2" id="fechaFiltro">
+  <button class="btn btn-success mb-2" onclick="filtrarHistorial()">Buscar</button>
 </div>
 
-<div class="bg-white border rounded p-3">
+<div class="bg-white border rounded p-3" style="max-height: 500px; overflow-y: auto;">
   <% if(historial.length === 0){ %>
-    <p>No hay registros disponibles.</p>
+    <p class="text-muted text-center">No hay registros disponibles.</p>
   <% } else { %>
-    <% historial.forEach(h => { %>
-      <div class="mb-2">
-        <strong><%= h.tipo.charAt(0).toUpperCase() + h.tipo.slice(1) %></strong> - 
-        <%= h.fechaHora %> <br>
-        <em>Detalles:</em> <%= JSON.stringify(h.detalle) %>
-      </div>
-    <% }) %>
+    <div class="row g-3">
+      <% historial.forEach(h => { %>
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header 
+                        <% if(h.tipo === 'temperatura'){ %> bg-danger text-white <% } else { %> bg-primary text-white <% } %>">
+              <strong><%= h.tipo.charAt(0).toUpperCase() + h.tipo.slice(1) %></strong>
+            </div>
+            <div class="card-body">
+              <p class="mb-1"><strong>Fecha:</strong> <%= h.fechaHora %></p>
+              <p class="mb-0"><strong>Detalles:</strong> <%= JSON.stringify(h.detalle) %></p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
   <% } %>
 </div>
 
@@ -31,4 +39,13 @@ function filtrarHistorial() {
   const fecha = document.getElementById('fechaFiltro').value;
   window.location.href = `/historial?tipo=${tipo}&fecha=${fecha}`;
 }
+
+// Recarga automática cada 10 segundos
+function recargarHistorial() {
+  const tipo = document.getElementById('filtroTipo').value;
+  const fecha = document.getElementById('fechaFiltro').value;
+  window.location.href = `/historial?tipo=${tipo}&fecha=${fecha}`;
+}
+
+setInterval(recargarHistorial, 10000);
 </script>

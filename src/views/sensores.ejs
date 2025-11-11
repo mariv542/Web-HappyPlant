@@ -4,44 +4,15 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div class="bg-white border rounded shadow-sm p-4">
-        
-        <!-- 🧭 Lista de sensores registrados -->
-        <h5 class="mb-3 text-primary">Lista de Sensores</h5>
-        <% if(!sensores || sensores.length === 0) { %>
-          <p class="text-muted">No hay sensores registrados.</p>
-        <% } else { %>
-          <table class="table table-striped align-middle text-center fs-5">
-            <thead class="table-success">
-              <tr>
-                <th>Nombre</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% sensores.forEach(s => { %>
-                <tr>
-                  <td class="py-3"><%= s.tipo %></td>
-                  <td class="py-3">
-                    <span class="<%= s.activo ? 'text-success' : 'text-danger' %> fw-bold">
-                      <%= s.activo ? 'Activo' : 'Inactivo' %>
-                    </span>
-                  </td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
-        <% } %>
-
-        <!-- 🌡️ Sensores simulados -->
-        <hr class="my-4">
-        <h5 class="mb-3 text-primary">Sensores Simulados</h5>
-        <table class="table table-bordered text-center align-middle fs-5" id="tablaSimulados" style="min-width: 700px;">
+        <h5 class="mb-3 text-primary">Sensores</h5>
+        <table class="table table-bordered text-center align-middle fs-5" style="min-width: 700px;">
           <thead class="table-info">
             <tr style="height: 60px;">
               <th>Sensor</th>
               <th>Valor actual</th>
               <th>Valor anterior</th>
               <th>Estado</th>
+              <th>Heatcheck</th>
             </tr>
           </thead>
           <tbody>
@@ -50,49 +21,96 @@
               <td id="tempValor" class="fw-semibold">-- °C</td>
               <td id="tempAnterior" class="fw-semibold">-- °C</td>
               <td class="text-success fw-bold">Activo</td>
+              <td>
+                <div class="progress heatcheck">
+                  <div id="barraTemp" class="progress-bar bg-info" style="width: 0%; transition: width 0.6s;"></div>
+                </div>
+              </td>
             </tr>
             <tr style="height: 60px;">
               <td>💧 Humedad</td>
               <td id="humValor" class="fw-semibold">-- %</td>
               <td id="humAnterior" class="fw-semibold">-- %</td>
               <td class="text-success fw-bold">Activo</td>
+              <td>
+                <div class="progress heatcheck">
+                  <div id="barraHum" class="progress-bar bg-info" style="width: 0%; transition: width 0.6s;"></div>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
-
       </div>
     </div>
   </div>
 </div>
 
+<style>
+.heatcheck { 
+  height: 20px; 
+  border-radius: 10px; 
+  overflow: hidden; 
+}
+.progress-bar { 
+  font-size: 0.9rem; 
+  font-weight: bold; 
+  color: white; 
+  text-align: center;
+}
+/* Colores dinámicos */
+.bg-cold { background-color: #00bcd4 !important; }  /* Azul frío */
+.bg-normal { background-color: #4caf50 !important; } /* Verde normal */
+.bg-hot { background-color: #ff9800 !important; }   /* Naranja cálido */
+.bg-danger { background-color: #f44336 !important; } /* Rojo peligro */
+</style>
+
+<script src="/socket.io/socket.io.js"></script>
 <script>
-  // Valores iniciales 
-  let tempActual = 22.0;  
-  let humActual = 75.0;   
-  let tempAnterior = tempActual;
-  let humAnterior = humActual;
+const socket = io(); // Conexión al servidor Socket.io
 
-  function Valores() {
-    // Guardar los valores actuales como anteriores
-    tempAnterior = tempActual;
-    humAnterior = humActual;
+let tempAnterior = 0;
+let tempActual = 0;
+let humAnterior = 0;
+let humActual = 0;
 
-    tempActual += (Math.random() * 0.6 - 0.3);  
-    humActual += (Math.random() * 2 - 1);       
+// Función para actualizar barras Heatcheck según rango
+function actualizarHeatcheck(temp, hum) {
+  const barraTemp = document.getElementById("barraTemp");
+  let claseTemp = "bg-normal";
+  if(temp < 20) claseTemp = "bg-cold";
+  else if(temp < 25) claseTemp = "bg-normal";
+  else if(temp < 28) claseTemp = "bg-hot";
+  else claseTemp = "bg-danger";
+  barraTemp.className = `progress-bar ${claseTemp}`;
+  barraTemp.style.width = `${((temp - 18) / 12) * 100}%`;
+  barraTemp.innerText = `${temp.toFixed(1)}°C`;
 
-    if (tempActual < 18) tempActual = 18;
-    if (tempActual > 26) tempActual = 26;
-    if (humActual < 60) humActual = 60;
-    if (humActual > 90) humActual = 90;
+  const barraHum = document.getElementById("barraHum");
+  let claseHum = "bg-normal";
+  if(hum < 50) claseHum = "bg-cold";
+  else if(hum < 70) claseHum = "bg-normal";
+  else if(hum < 85) claseHum = "bg-hot";
+  else claseHum = "bg-danger";
+  barraHum.className = `progress-bar ${claseHum}`;
+  barraHum.style.width = `${hum}%`;
+  barraHum.innerText = `${hum.toFixed(1)}%`;
+}
 
-    document.getElementById("tempValor").innerText = `${tempActual.toFixed(1)} °C`;
-    document.getElementById("tempAnterior").innerText = `${tempAnterior.toFixed(1)} °C`;
+// Escuchar datos en tiempo real desde el servidor
+socket.on("actualizarSensores", data => {
+  console.log("Datos recibidos:", data);
 
-    document.getElementById("humValor").innerText = `${humActual.toFixed(1)} %`;
-    document.getElementById("humAnterior").innerText = `${humAnterior.toFixed(1)} %`;
-  }
+  tempAnterior = tempActual;
+  humAnterior = humActual;
 
-  // Ejecutar al cargar y cada 10 segundos
-  Valores();
-  setInterval(Valores, 10000);
+  tempActual = parseFloat(data.temperatura);
+  humActual = parseFloat(data.humedad);
+
+  document.getElementById("tempValor").innerText = `${tempActual.toFixed(1)} °C`;
+  document.getElementById("tempAnterior").innerText = `${tempAnterior.toFixed(1)} °C`;
+  document.getElementById("humValor").innerText = `${humActual.toFixed(1)} %`;
+  document.getElementById("humAnterior").innerText = `${humAnterior.toFixed(1)} %`;
+
+  actualizarHeatcheck(tempActual, humActual);
+});
 </script>

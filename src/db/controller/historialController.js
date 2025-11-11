@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const historialSchema = new mongoose.Schema({
-  id: String,
   plantaId: String,
   tipo: String,
   detalle: Object,
@@ -10,11 +9,9 @@ const historialSchema = new mongoose.Schema({
 
 const Historial = mongoose.model("Historial", historialSchema);
 
-// Solo devuelve los datos, no usa res
 const listarHistorial = async () => {
   try {
-    const historial = await Historial.find();
-    return historial; // ✅ devuelve la lista
+    return await Historial.find().sort({ _id: -1 }); // más recientes primero
   } catch (error) {
     throw new Error(error.message);
   }
@@ -22,9 +19,9 @@ const listarHistorial = async () => {
 
 const crearHistorial = async (dato) => {
   try {
-    const h = new Historial(dato);
-    await h.save();
-    return h;
+    const nuevo = new Historial(dato);
+    await nuevo.save();
+    return nuevo;
   } catch (error) {
     throw new Error(error.message);
   }
