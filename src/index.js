@@ -30,7 +30,14 @@ app.set("layout", "Layouts/main");
 conectarDB();
 
 // ==== Importar simulación de sensores ====
-require("./utils/Sensores")(io); // <-- pasamos io para emitir datos en tiempo real
+// IMPORTAMOS EL OBJETO COMPLETO
+const Sensores = require("./utils/Sensores");
+
+// INICIALIZAMOS LA SIMULACIÓN (IMPORTANTE)
+Sensores.init(io);
+
+// GUARDAMOS LA INSTANCIA PARA QUE LAS RUTAS LA USEN
+app.set("sensoresControl", Sensores);
 
 // ==== Rutas principales ====
 const mainRoutes = require("./routes/routes");

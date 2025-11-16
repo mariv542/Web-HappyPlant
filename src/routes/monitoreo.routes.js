@@ -2,8 +2,11 @@ const { Router } = require("express");
 const router = Router();
 const { listarMonitoreo, ObetenerSensores } = require("../db/controller/monitoreoController");
 const { crearHistorial } = require("../db/controller/historialController");
+const Sensores = require("../utils/Sensores"); // <-- INSTANCIA REAL
 
-// Ruta principal
+// ================================
+//  RUTA PRINCIPAL: /monitoreo
+// ================================
 router.get("/", async (req, res) => {
   try {
     const sensoresBD = await listarMonitoreo();
@@ -18,19 +21,21 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Ruta para guardar datos simulados en MongoDB
-router.post("/guardar", async (req, res) => {
+// ===============================================
+//  🔥 RUTA QUE ACTIVARÁ EL CAMBIO LENTO
+//  /monitoreo/forzar
+// ===============================================
+router.post("/forzar", (req, res) => {
   try {
-    const { tipo, valor } = req.body;
+    const result = Sensores.forzarCambio(); // <-- MISMA INSTANCIA DEL SIMULADOR
 
-    const nuevoHistorial = await crearHistorial({
-      plantaId: "1",
-      tipo,
-      detalle: { valor },
-      fechaHora: new Date().toLocaleString(),
+    console.log("🔥 forzarCambio ejecutado:", result);
+
+    res.json({
+      ok: true,
+      mensaje: "Alteración de sensores activada.",
+      data: result,
     });
-
-    res.status(200).json({ ok: true, historial: nuevoHistorial });
   } catch (error) {
     res.status(500).json({ ok: false, mensaje: error.message });
   }
