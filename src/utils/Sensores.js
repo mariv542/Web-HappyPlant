@@ -153,7 +153,7 @@ function generarValores() {
 // ==============================
 //   INICIALIZAR SIMULADOR
 // ==============================
-function init(io, intervaloMs = 1000) {
+function init(io, intervaloMs = 10000) {
   ioRef = io;
 
   console.log("🚀 Simulador iniciado");
