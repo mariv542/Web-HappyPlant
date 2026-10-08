@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 // Cargar el archivo .env desde la carpeta /config
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 // URI desde el archivo .env o conexión local por defecto
 const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/orchid_monitor";

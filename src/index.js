@@ -6,6 +6,7 @@ const conectarDB = require("./db/connection");
 const expressLayouts = require("express-ejs-layouts");
 const http = require("http");
 const { Server } = require("socket.io");
+const os = require("os");
 
 // ==== Configuración inicial ====
 dotenv.config();
@@ -49,6 +50,13 @@ app.use((req, res) => {
 });
 
 // ==== Iniciar servidor ====
-server.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Servidor local: http://localhost:${PORT}`);
+  for (const redes of Object.values(os.networkInterfaces())) {
+    for (const red of redes) {
+      if (red.family === "IPv4" && !red.internal) {
+        console.log(`🌐 En la red local:  http://${red.address}:${PORT}`);
+      }
+    }
+  }
 });
